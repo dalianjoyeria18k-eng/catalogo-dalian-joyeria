@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DALIAN Joyería · Manillas, anillos y topos tejidos a mano</title>
+<meta name="description" content="Manillas, anillos y topos tejidos a mano con neopreno y balines diamantados en oro laminado. Haz tu pedido por WhatsApp.">
+<meta property="og:title" content="DALIAN Joyería">
+<meta property="og:description" content="Tejido a mano. Hecho para brillar.">
+<meta property="og:image" content="img/sq20.jpg">
+<link rel="icon" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --negro:#0f0e0c; --negro2:#1a1814; --oro:#c9a24d; --oro-claro:#e6cc8a; --oro-osc:#9c7a30;
+  --marfil:#faf8f4; --marfil2:#f1ece2; --texto:#2a2620; --gris:#6f675b; --linea:#e4dccb;
+  --radio:14px; --ancho:1180px;
+  --serif:'Cinzel',Georgia,serif; --acento:'Cormorant Garamond',Georgia,serif; --sans:'Montserrat',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{overflow-x:hidden}
+body{font-family:var(--sans);color:var(--texto);background:var(--marfil);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.wrap{max-width:var(--ancho);margin:0 auto;padding:0 20px}
+.eyebrow{font-family:var(--sans);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--oro-osc);font-weight:600}
+h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:.04em;line-height:1.2}
+h2{font-size:clamp(26px,4vw,38px);margin:10px 0 14px}
+.lead{font-family:var(--acento);font-size:clamp(19px,2.4vw,23px);font-style:italic;color:var(--gris)}
+.center{text-align:center}
+.sec{padding:clamp(64px,9vw,110px) 0}
+.sec-head{max-width:640px;margin:0 auto 44px;text-align:center}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:.25s}
+.btn-oro{background:linear-gradient(135deg,var(--oro-claro),var(--oro) 50%,var(--oro-osc));color:var(--negro)}
+.btn-oro:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-linea{border:1px solid currentColor}
+.btn-linea:hover{background:rgba(201,162,77,.12)}
+.btn-ws{background:#1f9d55;color:#fff}
+.btn-ws:hover{background:#178246}
+svg.i{width:18px;height:18px;fill:currentColor;flex:none}
+
+/* promo */
+.promo{background:var(--negro);color:var(--oro-claro);text-align:center;font-size:12px;letter-spacing:.14em;padding:9px 16px;border-bottom:1px solid rgba(201,162,77,.25)}
+/* header */
+header{position:sticky;top:0;z-index:40;background:rgba(15,14,12,.92);backdrop-filter:blur(10px);color:#f3ead6}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.marca{display:flex;align-items:center;gap:10px}
+.marca img{height:40px;width:auto}
+.marca b{font-family:var(--serif);font-weight:500;font-size:20px;letter-spacing:.22em;color:var(--oro-claro)}
+.links{display:flex;gap:28px;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+.links a:hover{color:var(--oro-claro)}
+.nav-der{display:flex;align-items:center;gap:6px}
+.bolsa{position:relative;padding:10px}
+.bolsa .n{position:absolute;top:2px;right:0;background:var(--oro);color:var(--negro);font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center}
+.menu-btn{display:none;padding:10px}
+@media (max-width:860px){
+  .links{position:absolute;top:68px;left:0;right:0;background:var(--negro);flex-direction:column;gap:0;padding:8px 20px 20px;transform:translateY(-12px);opacity:0;visibility:hidden;transition:.25s}
+  .links.abierto{transform:none;opacity:1;visibility:visible}
+  .links a{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+  .menu-btn{display:block}
+}
+/* hero */
+.hero{background:radial-gradient(ellipse at 70% 30%,#2a2417 0%,var(--negro) 60%);color:#f3ead6;overflow:hidden}
+.hero-in{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;min-height:min(86vh,760px);padding:50px 20px}
+.hero h1{font-size:clamp(34px,5.4vw,64px);color:#fff;margin:16px 0 18px}
+.hero h1 em{font-family:var(--acento);font-style:italic;font-weight:400;color:var(--oro-claro);letter-spacing:0}
+.hero p{font-size:16px;color:#cfc6b4;max-width:480px;margin-bottom:30px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px}
+.hero .eyebrow{color:var(--oro)}
+.hero-fotos{position:relative;height:540px}
+.hero-fotos img{position:absolute;border-radius:18px;object-fit:cover;box-shadow:0 30px 60px rgba(0,0,0,.55)}
+.hero-fotos .f1{width:62%;height:78%;right:0;top:0}
+.hero-fotos .f2{width:48%;height:52%;left:0;bottom:0;border:6px solid var(--negro)}
+.hero-fotos .sello{position:absolute;left:8%;top:6%;width:120px;opacity:.9}
+.hero-datos{display:flex;gap:34px;margin-top:40px;flex-wrap:wrap}
+.hero-datos div{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#a99f8b}
+.hero-datos b{display:block;font-family:var(--serif);font-size:22px;letter-spacing:.06em;color:var(--oro-claro);font-weight:500}
+@media (max-width:860px){.hero-in{grid-template-columns:1fr;min-height:0;padding:44px 20px 56px}.hero-fotos{height:380px;order:-1}}
+/* colección */
+.filtros{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:34px}
+.chip{padding:9px 18px;border-radius:999px;border:1px solid var(--linea);font-size:12px;letter-spacing:.12em;text-transform:uppercase;background:#fff;transition:.2s}
+.chip.on,.chip:hover{background:var(--negro);color:var(--oro-claro);border-color:var(--negro)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+.card{background:#fff;border-radius:var(--radio);overflow:hidden;box-shadow:0 1px 0 var(--linea),0 10px 30px rgba(42,38,32,.06);display:flex;flex-direction:column;transition:.25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 1px 0 var(--linea),0 18px 40px rgba(42,38,32,.12)}
+.card .ft{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--marfil2)}
+.card .ft img{width:100%;height:100%;object-fit:cover;transition:.5s}
+.card:hover .ft img{transform:scale(1.04)}
+.tag{position:absolute;top:12px;left:12px;background:var(--negro);color:var(--oro-claro);font-size:10px;font-weight:600;letter-spacing:.18em;padding:5px 10px;border-radius:999px}
+.tag.ag{background:#8a2a1f;color:#fff}
+.card .tx{padding:18px 18px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card .cod{font-size:10px;letter-spacing:.2em;color:var(--gris)}
+.card h3{font-size:18px}
+.card .corta{font-size:13.5px;color:var(--gris);flex:1}
+.card .pie{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:8px}
+.precio{font-family:var(--serif);font-size:17px;color:var(--oro-osc)}
+.precio.consultar{font-family:var(--sans);font-size:12px;letter-spacing:.08em;color:var(--gris)}
+.mas{width:40px;height:40px;border-radius:50%;border:1px solid var(--linea);display:grid;place-items:center;font-size:20px;transition:.2s}
+.mas:hover{background:var(--oro);border-color:var(--oro)}
+/* promos */
+.promos{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.promo-c{background:var(--negro2);border:1px solid rgba(201,162,77,.3);border-radius:var(--radio);overflow:hidden;display:flex;flex-direction:column}
+.promo-c img{aspect-ratio:4/3;object-fit:cover;width:100%}
+.promo-c div{padding:20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.promo-c h3{color:#fff;font-size:17px}
+.promo-c .of{font-family:var(--acento);font-style:italic;font-size:19px;color:var(--oro-claro);line-height:1.3}
+.promo-c p{font-size:13px;color:#b5ab96;flex:1}
+.promo-c a{margin-top:10px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--oro)}
+.promo-c a:hover{color:var(--oro-claro)}
+@media (max-width:1000px){.promos{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.promos{grid-template-columns:1fr}}
+/* materiales */
+.oscuro{background:var(--negro);color:#e9e0cc}
+.oscuro .eyebrow{color:var(--oro)}
+.oscuro h2{color:#fff}
+.oscuro .lead{color:#b5ab96}
+.mats{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.mat{border:1px solid rgba(201,162,77,.28);border-radius:var(--radio);overflow:hidden;background:var(--negro2)}
+.mat img{aspect-ratio:16/11;object-fit:cover;width:100%}
+.mat div{padding:22px}
+.mat h3{color:var(--oro-claro);font-size:18px;margin-bottom:8px}
+.mat p{font-size:14px;color:#b5ab96}
+@media (max-width:860px){.mats{grid-template-columns:1fr}}
+/* personaliza */
+.pers{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.pers .vista{border-radius:18px;overflow:hidden;aspect-ratio:1;box-shadow:0 20px 50px rgba(42,38,32,.15)}
+.pers .vista img{width:100%;height:100%;object-fit:cover}
+.opc{margin:18px 0}
+.opc label{display:block;font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.colores{display:flex;flex-wrap:wrap;gap:10px}
+.col{width:38px;height:38px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--linea);transition:.15s}
+.col.on{box-shadow:0 0 0 2px var(--oro)}
+.pill-set{display:flex;flex-wrap:wrap;gap:8px}
+.pill{padding:8px 14px;border-radius:999px;border:1px solid var(--linea);font-size:13px;background:#fff}
+.pill.on{background:var(--negro);color:var(--oro-claro);border-color:var(--negro)}
+.resumen{font-family:var(--acento);font-style:italic;font-size:19px;color:var(--gris);margin:18px 0 22px}
+@media (max-width:860px){.pers{grid-template-columns:1fr;gap:28px}}
+/* pasos */
+.pasos{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:p}
+.paso{background:#fff;border-radius:var(--radio);padding:28px 22px;border:1px solid var(--linea);position:relative}
+.paso::before{counter-increment:p;content:"0" counter(p);font-family:var(--serif);font-size:30px;color:var(--oro);display:block;margin-bottom:10px}
+.paso h3{font-size:16px;margin-bottom:6px}
+.paso p{font-size:14px;color:var(--gris)}
+@media (max-width:860px){.pasos{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.pasos{grid-template-columns:1fr}}
+/* cuidados + faq */
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.cuid li{list-style:none;padding:14px 0 14px 34px;border-bottom:1px solid var(--linea);position:relative;font-size:14.5px}
+.cuid li::before{content:"✦";position:absolute;left:4px;top:13px;color:var(--oro)}
+details{border-bottom:1px solid var(--linea);padding:16px 0}
+summary{cursor:pointer;font-weight:600;font-size:14.5px;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::after{content:"+";color:var(--oro-osc);font-size:20px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin-top:10px;font-size:14px;color:var(--gris)}
+@media (max-width:860px){.dos{grid-template-columns:1fr}}
+/* galería */
+.gal{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.gal img{aspect-ratio:1;object-fit:cover;border-radius:10px;width:100%}
+@media (max-width:860px){.gal{grid-template-columns:repeat(3,1fr)}}
+/* footer */
+footer{background:var(--negro);color:#b5ab96;padding:64px 0 28px;font-size:14px}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+.foot img{width:150px;margin-bottom:14px}
+.foot h4{font-family:var(--serif);font-weight:500;color:var(--oro-claro);letter-spacing:.14em;font-size:14px;margin-bottom:14px}
+.foot a{display:block;padding:4px 0}
+.foot a:hover{color:var(--oro-claro)}
+.copy{border-top:1px solid rgba(255,255,255,.08);margin-top:44px;padding-top:20px;font-size:12px;text-align:center;letter-spacing:.06em}
+@media (max-width:760px){.foot{grid-template-columns:1fr}}
+/* flotante ws */
+.ws-flot{position:fixed;right:18px;bottom:18px;z-index:50;width:58px;height:58px;border-radius:50%;background:#1f9d55;color:#fff;display:grid;place-items:center;box-shadow:0 10px 26px rgba(0,0,0,.3)}
+.ws-flot svg{width:28px;height:28px}
+/* modal */
+.capa{position:fixed;inset:0;background:rgba(10,9,7,.7);z-index:60;display:none;align-items:center;justify-content:center;padding:16px}
+.capa.on{display:flex}
+.modal{background:var(--marfil);border-radius:18px;max-width:900px;width:100%;max-height:92vh;overflow:auto;display:grid;grid-template-columns:1fr 1fr;position:relative}
+.modal .gal-m img.prin{width:100%;aspect-ratio:4/5;object-fit:cover}
+.miniat{display:flex;gap:8px;padding:10px}
+.miniat img{width:64px;height:64px;object-fit:cover;border-radius:8px;cursor:pointer;opacity:.6}
+.miniat img.on{opacity:1;outline:2px solid var(--oro)}
+.modal .info{padding:34px 30px}
+.modal h3{font-size:26px;margin:6px 0 10px}
+.modal ul{margin:16px 0 22px;padding-left:0}
+.modal li{list-style:none;font-size:14px;padding:5px 0 5px 22px;position:relative}
+.modal li::before{content:"✦";position:absolute;left:0;color:var(--oro);font-size:11px;top:8px}
+.cerrar{position:absolute;top:10px;right:12px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.9);font-size:22px;z-index:2}
+.acc{display:flex;flex-direction:column;gap:10px}
+.acc .btn{justify-content:center}
+@media (max-width:760px){.modal{grid-template-columns:1fr}.modal .info{padding:24px 20px}}
+/* bolsa drawer */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,100%);background:var(--marfil);z-index:70;transform:translateX(100%);transition:.3s;display:flex;flex-direction:column;box-shadow:-20px 0 50px rgba(0,0,0,.25)}
+.drawer.on{transform:none}
+.drawer header{position:static;background:var(--negro);padding:20px;display:flex;justify-content:space-between;align-items:center}
+.drawer header h3{color:var(--oro-claro);font-size:17px}
+.items{flex:1;overflow:auto;padding:12px 20px}
+.it{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--linea)}
+.it img{width:58px;height:58px;border-radius:8px;object-fit:cover}
+.it .nm{flex:1;font-size:14px;font-weight:600}
+.it .nm small{display:block;font-weight:400;color:var(--gris);font-size:12px}
+.cant{display:flex;align-items:center;gap:8px}
+.cant button{width:28px;height:28px;border-radius:50%;border:1px solid var(--linea)}
+.drawer .fin{padding:20px;border-top:1px solid var(--linea)}
+.drawer .fin .btn{width:100%;justify-content:center}
+.vacio{color:var(--gris);text-align:center;padding:40px 0;font-size:14px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(120px);background:var(--negro);color:var(--oro-claro);padding:12px 22px;border-radius:999px;font-size:13px;z-index:80;transition:.3s}
+.toast.on{transform:translateX(-50%)}
+</style>
+</head>
+<body>
+
+<div class="promo" id="promo"></div>
+
+<header>
+  <div class="wrap nav">
+    <a href="#inicio" class="marca"><img src="img/emblema.png" alt=""><b>DALIAN</b></a>
+    <nav class="links" id="links">
+      <a href="#coleccion">Colección</a>
+      <a href="#materiales">Materiales</a>
+      <a href="#personaliza">Personaliza</a>
+      <a href="#promos">Promos</a>
+      <a href="#comprar">Cómo comprar</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <div class="nav-der">
+      <button class="bolsa" id="abrirBolsa" aria-label="Ver mi pedido">
+        <svg class="i" viewBox="0 0 24 24"><path d="M7 7V6a5 5 0 0 1 10 0v1h3l-1 15H5L4 7h3zm2 0h6V6a3 3 0 0 0-6 0v1zm-2.9 2 .8 11h10.2l.8-11H6.1z"/></svg>
+        <span class="n" id="nBolsa">0</span>
+      </button>
+      <button class="menu-btn" id="menuBtn" aria-label="Menú"><svg class="i" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="inicio">
+  <div class="wrap hero-in">
+    <div>
+      <span class="eyebrow">Joyería artesanal · Oro laminado</span>
+      <h1>Tejido a mano.<br><em>Hecho para brillar.</em></h1>
+      <p>Manillas, anillos y topos tejidos a mano con neopreno y balines diamantados en oro laminado. Cada pieza se hace con dedicación y se entrega lista para regalar.</p>
+      <div class="ctas">
+        <a href="#coleccion" class="btn btn-oro">Ver colección</a>
+        <a href="#" class="btn btn-linea ws-link" data-msg="¡Hola DALIAN! Quiero información sobre sus joyas ✨">
+          <svg class="i" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
+          Escríbenos
+        </a>
+      </div>
+      <div class="hero-datos">
+        <div><b>100%</b>Hecho a mano</div>
+        <div><b>+20</b>Diseños de topos</div>
+        <div><b>Caja</b>de regalo incluida</div>
+      </div>
+    </div>
+    <div class="hero-fotos">
+      <img class="f1" src="img/p20.jpg" alt="Manilla Majestad tejida en negro con balines diamantados">
+      <img class="f2" src="img/p21.jpg" alt="Set Titán: anillo y manilla a juego">
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="coleccion">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">La colección</span>
+      <h2>Piezas que cuentan tu historia</h2>
+      <p class="lead">Escoge tu favorita y agrégala a tu pedido. Lo confirmamos contigo por WhatsApp.</p>
+    </div>
+    <div class="filtros" id="filtros"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section class="sec oscuro" id="materiales">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Materiales</span>
+      <h2>Lo que hace especial a una DALIAN</h2>
+      <p class="lead">Tres elementos, una misma promesa: brillo que dura y comodidad para todos los días.</p>
+    </div>
+    <div class="mats">
+      <div class="mat"><img src="img/sq22.jpg" alt=""><div><h3>Balines diamantados</h3><p>Esferas en oro laminado con corte diamantado que reflejan la luz desde todos los ángulos.</p></div></div>
+      <div class="mat"><img src="img/sq10.jpg" alt=""><div><h3>Neopreno</h3><p>Perlas de acabado mate, livianas y resistentes, en negro, rojo y gris. El contraste perfecto para el dorado.</p></div></div>
+      <div class="mat"><img src="img/sq24.jpg" alt=""><div><h3>Tejido artesanal</h3><p>Cada manilla se teje a mano, nudo por nudo, con cierre corredizo que se ajusta a tu muñeca.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="personaliza">
+  <div class="wrap pers">
+    <div class="vista"><img id="persImg" src="img/sq03.jpg" alt="Vista de referencia de la manilla"></div>
+    <div>
+      <span class="eyebrow">Hecha para ti</span>
+      <h2>Arma tu manilla</h2>
+      <p class="lead">Escoge los colores y el estilo. Te la tejemos a tu medida.</p>
+      <div class="opc"><label>Color del hilo</label><div class="colores" id="cHilo"></div><small style="display:block;margin-top:8px;color:var(--gris);font-size:12.5px">¿Buscas otro color? Tenemos más: pregúntanos por WhatsApp.</small></div>
+      <div class="opc"><label>Perlas de neopreno</label><div class="pill-set" id="cNeo"></div></div>
+      <div class="opc"><label>Dije central</label><div class="pill-set" id="cDije"></div></div>
+      <p class="resumen" id="resumen"></p>
+      <a href="#" class="btn btn-ws" id="pedirPers">
+        <svg class="i" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>
+        Pedir mi diseño
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="sec oscuro" id="promos" style="background:#141210">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Promos de siempre</span>
+      <h2>Más brillo, mejor precio</h2>
+      <p class="lead">Promociones vigentes todo el año. Escríbenos y te ayudamos a armar la tuya.</p>
+    </div>
+    <div class="promos" id="listaPromos"></div>
+  </div>
+</section>
+
+<section class="sec" id="comprar" style="background:var(--marfil2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Así de fácil</span>
+      <h2>Cómo comprar</h2>
+    </div>
+    <div class="pasos">
+      <div class="paso"><h3>Elige</h3><p>Agrega tus piezas favoritas al pedido desde la colección.</p></div>
+      <div class="paso"><h3>Envía</h3><p>Manda tu pedido por WhatsApp con un clic. Te confirmamos precio y disponibilidad.</p></div>
+      <div class="paso"><h3>Paga</h3><p>En efectivo, por transferencia desde cualquier banco o contraentrega.</p></div>
+      <div class="paso"><h3>Recibe</h3><p>Tu joya llega en caja de regalo DALIAN, lista para sorprender.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap dos">
+    <div>
+      <span class="eyebrow">Cuidados</span>
+      <h2>Para que brille siempre</h2>
+      <ul class="cuid">
+        <li>Evita el contacto con perfumes, cremas y cloro.</li>
+        <li>Retírala para bañarte, nadar o hacer ejercicio intenso.</li>
+        <li>Límpiala con un paño suave y seco.</li>
+        <li>Guárdala en su caja cuando no la uses.</li>
+        <li>Para ajustar el tejido, desliza los nudos suavemente.</li>
+      </ul>
+    </div>
+    <div>
+      <span class="eyebrow">Preguntas frecuentes</span>
+      <h2>Resolvemos tus dudas</h2>
+      <details><summary>¿Hacen envíos a todo el país?</summary><p>Sí. Estamos en Cúcuta y enviamos a toda Colombia. El costo y tiempo de entrega dependen de tu ciudad; te los confirmamos por WhatsApp.</p></details>
+      <details><summary>¿Cómo puedo pagar?</summary><p>En efectivo, por transferencia desde cualquier banco o contraentrega.</p></details>
+      <details><summary>¿Las manillas son ajustables?</summary><p>Sí. Todas las manillas tejidas tienen cierre corredizo. Los anillos tejidos se hacen a tu talla: cuéntanos cuál es al hacer el pedido.</p></details>
+      <details><summary>¿Qué es el oro laminado?</summary><p>Es una capa de oro adherida a una base metálica. Da el brillo del oro con un precio accesible y, con los cuidados indicados, conserva su color por mucho tiempo.</p></details>
+      <details><summary>¿Venden al por mayor?</summary><p>Sí, vendemos al por mayor desde 6 unidades, con precios especiales para revendedores. Escríbenos para recibir la lista mayorista.</p></details>
+      <details><summary>¿Tienen garantía?</summary><p>Todas las piezas tienen garantía en el tejido y los cierres. Escríbenos si algo no está bien con tu pedido.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="sec oscuro" style="padding-top:70px;padding-bottom:70px">
+  <div class="wrap">
+    <div class="sec-head" style="margin-bottom:30px">
+      <span class="eyebrow">Síguenos</span>
+      <h2 id="igHandle">@dalianjoyeria18k</h2>
+      <p class="lead" id="ttHandle"></p>
+    </div>
+    <div class="gal">
+      <img src="img/sq13.jpg" alt=""><img src="img/sq19.jpg" alt=""><img src="img/sq01.jpg" alt=""><img src="img/sq14.jpg" alt=""><img src="img/sq18.jpg" alt=""><img src="img/sq11.jpg" alt="">
+    </div>
+  </div>
+</section>
+
+<footer id="contacto">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <img src="img/logo-oscuro.png" alt="DALIAN Joyería">
+        <p>Manillas, anillos y topos tejidos a mano con neopreno y balines diamantados en oro laminado.</p>
+      </div>
+      <div>
+        <h4>CONTACTO</h4>
+        <a href="#" class="ws-link" data-msg="¡Hola DALIAN! ✨" id="fWs">WhatsApp</a>
+        <a href="#" id="fWs2">WhatsApp</a>
+        <a href="#" id="fIg">Instagram</a>
+        <a href="#" id="fTt">TikTok</a>
+        <a href="#" id="fMail">Correo</a>
+        <span id="fCiudad"></span>
+      </div>
+      <div>
+        <h4>TIENDA</h4>
+        <a href="#coleccion" data-cat="manillas" class="f-cat">Manillas</a>
+        <a href="#coleccion" data-cat="anillos" class="f-cat">Anillos</a>
+        <a href="#coleccion" data-cat="topos" class="f-cat">Topos</a>
+        <a href="#coleccion" data-cat="sets" class="f-cat">Sets y combos</a>
+      </div>
+    </div>
+    <div class="copy">© <span id="anio"></span> DALIAN Joyería · Hecho a mano en Cúcuta, Colombia</div>
+  </div>
+</footer>
+
+<a href="#" class="ws-flot ws-link" data-msg="¡Hola DALIAN! Quiero información sobre sus joyas ✨" aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
+</a>
+
+<div class="capa" id="capa"><div class="modal" id="modal"></div></div>
+
+<aside class="drawer" id="drawer" aria-label="Mi pedido">
+  <header><h3>MI PEDIDO</h3><button id="cerrarBolsa" style="color:#fff;font-size:24px" aria-label="Cerrar">×</button></header>
+  <div class="items" id="items"></div>
+  <div class="fin">
+    <a href="#" class="btn btn-ws" id="enviarPedido">Enviar pedido por WhatsApp</a>
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script src="productos.js"></script>
+<script>
+(function(){
+const C = window.DALIAN_CONFIG, CATS = window.DALIAN_CATEGORIAS, P = window.DALIAN_PRODUCTOS;
+const $ = s => document.querySelector(s);
+const fmt = v => v ? '$' + Number(v).toLocaleString('es-CO') : '';
+const ws = msg => 'https://wa.me/' + C.whatsapp + '?text=' + encodeURIComponent(msg);
+
+// config
+if (C.promo && C.promo.activa) $('#promo').textContent = C.promo.texto; else $('#promo').remove();
+document.querySelectorAll('.ws-link').forEach(a => { a.href = ws(a.dataset.msg); a.target = '_blank'; a.rel = 'noopener'; });
+const ig = C.instagram.replace('@','');
+$('#igHandle').textContent = C.instagram;
+$('#fIg').href = 'https://instagram.com/' + ig; $('#fIg').target = '_blank'; $('#fIg').textContent = 'Instagram ' + C.instagram;
+if (C.correo) { $('#fMail').href = 'mailto:' + C.correo; $('#fMail').textContent = C.correo; } else $('#fMail').remove();
+$('#fWs').textContent = 'WhatsApp ' + C.whatsappVisible;
+if (C.whatsapp2) { $('#fWs2').href = 'https://wa.me/' + C.whatsapp2 + '?text=' + encodeURIComponent('¡Hola DALIAN! ✨'); $('#fWs2').target = '_blank'; $('#fWs2').rel = 'noopener'; $('#fWs2').textContent = 'WhatsApp ' + C.whatsapp2Visible; } else $('#fWs2').remove();
+if (C.tiktok) { $('#fTt').href = 'https://www.tiktok.com/' + C.tiktok; $('#fTt').target = '_blank'; $('#fTt').rel = 'noopener'; $('#fTt').textContent = 'TikTok ' + C.tiktok; $('#ttHandle').textContent = 'y en TikTok ' + C.tiktok; } else { $('#fTt').remove(); $('#ttHandle').remove(); }
+$('#fCiudad').textContent = C.ciudad + ' · Envíos a toda Colombia';
+$('#fCiudad').textContent = C.ciudad;
+$('#anio').textContent = new Date().getFullYear();
+$('#menuBtn').onclick = () => $('#links').classList.toggle('abierto');
+document.querySelectorAll('#links a').forEach(a => a.onclick = () => $('#links').classList.remove('abierto'));
+
+// filtros + grid
+let cat = 'todos';
+function filtros(){
+  const cats = [['todos','Todo']].concat(Object.entries(CATS).filter(([k]) => P.some(p => p.categoria === k)));
+  $('#filtros').innerHTML = cats.map(([k,v]) => `<button class="chip ${k===cat?'on':''}" data-c="${k}">${v}</button>`).join('');
+  document.querySelectorAll('.chip').forEach(b => b.onclick = () => { cat = b.dataset.c; filtros(); grid(); });
+}
+function precioHTML(p){ return p.precio ? `<span class="precio">${fmt(p.precio)}</span>` : `<span class="precio consultar">Consultar precio</span>`; }
+function grid(){
+  const lista = P.filter(p => cat === 'todos' || p.categoria === cat);
+  $('#grid').innerHTML = lista.map(p => `
+    <article class="card">
+      <button class="ft" data-ver="${p.codigo}" aria-label="Ver ${p.nombre}">
+        <img src="${p.fotos[0]}" alt="${p.nombre}" loading="lazy">
+        ${p.agotado ? '<span class="tag ag">AGOTADO</span>' : p.nuevo ? '<span class="tag">NUEVO</span>' : ''}
+      </button>
+      <div class="tx">
+        <span class="cod">${p.codigo} · ${CATS[p.categoria]||''}</span>
+        <h3>${p.nombre}</h3>
+        <p class="corta">${p.corta}</p>
+        <div class="pie">${precioHTML(p)}<button class="mas" data-add="${p.codigo}" aria-label="Agregar ${p.nombre} al pedido" ${p.agotado?'disabled':''}>+</button></div>
+      </div>
+    </article>`).join('');
+  document.querySelectorAll('[data-ver]').forEach(b => b.onclick = () => abrir(b.dataset.ver));
+  document.querySelectorAll('[data-add]').forEach(b => b.onclick = () => agregar(b.dataset.add));
+}
+document.querySelectorAll('.f-cat').forEach(a => a.onclick = () => { cat = a.dataset.cat; filtros(); grid(); });
+
+// modal
+function abrir(cod){
+  const p = P.find(x => x.codigo === cod);
+  $('#modal').innerHTML = `
+    <button class="cerrar" id="cerrarM" aria-label="Cerrar">×</button>
+    <div class="gal-m"><img class="prin" id="prin" src="${p.fotos[0]}" alt="${p.nombre}">
+      ${p.fotos.length > 1 ? `<div class="miniat">${p.fotos.map((f,i)=>`<img src="${f}" class="${i?'':'on'}" alt="">`).join('')}</div>` : ''}</div>
+    <div class="info">
+      <span class="eyebrow">${p.codigo} · ${CATS[p.categoria]||''}</span>
+      <h3>${p.nombre}</h3>
+      ${precioHTML(p)}
+      <p style="margin-top:14px;font-size:14.5px">${p.descripcion}</p>
+      <ul>${p.detalles.map(d=>`<li>${d}</li>`).join('')}</ul>
+      <div class="acc">
+        <button class="btn btn-oro" id="addM" ${p.agotado?'disabled':''}>${p.agotado?'Agotado':'Agregar al pedido'}</button>
+        <a class="btn btn-ws" target="_blank" rel="noopener" href="${ws('¡Hola DALIAN! Me interesa: ' + p.nombre + ' (' + p.codigo + '). ¿Me das más información?')}">Preguntar por WhatsApp</a>
+      </div>
+    </div>`;
+  $('#capa').classList.add('on');
+  $('#cerrarM').onclick = cerrar;
+  $('#addM').onclick = () => { agregar(cod); cerrar(); };
+  document.querySelectorAll('.miniat img').forEach(m => m.onclick = () => {
+    $('#prin').src = m.src; document.querySelectorAll('.miniat img').forEach(x=>x.classList.remove('on')); m.classList.add('on'); });
+}
+function cerrar(){ $('#capa').classList.remove('on'); }
+$('#capa').onclick = e => { if (e.target.id === 'capa') cerrar(); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ cerrar(); $('#drawer').classList.remove('on'); } });
+
+// bolsa (pedido)
+let bolsa = {};
+try { bolsa = JSON.parse(localStorage.getItem('dalian_bolsa') || '{}'); } catch(e){}
+function guardar(){ try { localStorage.setItem('dalian_bolsa', JSON.stringify(bolsa)); } catch(e){} }
+function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('on'); setTimeout(()=>el.classList.remove('on'), 1800); }
+function agregar(cod){ bolsa[cod] = (bolsa[cod]||0) + 1; guardar(); pintarBolsa(); toast('Agregado a tu pedido ✦'); }
+function pintarBolsa(){
+  const cods = Object.keys(bolsa).filter(c => P.find(p=>p.codigo===c));
+  $('#nBolsa').textContent = cods.reduce((s,c)=>s+bolsa[c],0);
+  $('#items').innerHTML = cods.length ? cods.map(c => { const p = P.find(x=>x.codigo===c); return `
+    <div class="it"><img src="${p.fotos[0]}" alt=""><div class="nm">${p.nombre}<small>${p.codigo}${p.precio?' · '+fmt(p.precio):''}</small></div>
+    <div class="cant"><button data-m="${c}">−</button><span>${bolsa[c]}</span><button data-p="${c}">+</button></div></div>`; }).join('')
+    : '<p class="vacio">Tu pedido está vacío.<br>Agrega piezas desde la colección.</p>';
+  document.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { const c=b.dataset.m; bolsa[c]--; if(bolsa[c]<=0) delete bolsa[c]; guardar(); pintarBolsa(); });
+  document.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { bolsa[b.dataset.p]++; guardar(); pintarBolsa(); });
+  let total = 0, conPrecio = true;
+  const lineas = cods.map(c => { const p = P.find(x=>x.codigo===c); if (p.precio) total += p.precio*bolsa[c]; else conPrecio = false;
+    return `• ${bolsa[c]} x ${p.nombre} (${p.codigo})`; });
+  const msg = '¡Hola DALIAN! ✨ Quiero hacer este pedido:\n' + lineas.join('\n') + (conPrecio && total ? '\nTotal aprox: ' + fmt(total) : '') + '\n\nMi ciudad es: ';
+  $('#enviarPedido').href = cods.length ? ws(msg) : '#';
+  $('#enviarPedido').target = '_blank';
+}
+$('#abrirBolsa').onclick = () => $('#drawer').classList.add('on');
+$('#cerrarBolsa').onclick = () => $('#drawer').classList.remove('on');
+
+// personaliza
+const hilos = [['Negro','#111'],['Rojo','#c0272d'],['Verde','#1f9a4a'],['Gris','#8f9396'],['Dorado','#d4b06a'],['Azul','#1d3f8f'],['Blanco','#f4f1ea']];
+const neos = ['Negro mate','Rojo','Gris','Sin neopreno (solo balines)'];
+const dijes = ['Sin dije','San Benito','Virgen Milagrosa','Tío Rico'];
+const fotosHilo = {Negro:'img/sq10.jpg',Rojo:'img/sq03.jpg',Verde:'img/sq24.jpg',Gris:'img/sq17.jpg',Dorado:'img/sq13.jpg',Azul:'img/sq16.jpg',Blanco:'img/sq02.jpg'};
+let sel = {hilo:'Rojo', neo:'Negro mate', dije:'Sin dije'};
+function pers(){
+  $('#cHilo').innerHTML = hilos.map(([n,c]) => `<button class="col ${sel.hilo===n?'on':''}" style="background:${c}" title="${n}" aria-label="Hilo ${n}" data-h="${n}"></button>`).join('');
+  $('#cNeo').innerHTML = neos.map(n => `<button class="pill ${sel.neo===n?'on':''}" data-n="${n}">${n}</button>`).join('');
+  $('#cDije').innerHTML = dijes.map(n => `<button class="pill ${sel.dije===n?'on':''}" data-d="${n}">${n}</button>`).join('');
+  document.querySelectorAll('[data-h]').forEach(b => b.onclick = () => { sel.hilo = b.dataset.h; pers(); });
+  document.querySelectorAll('[data-n]').forEach(b => b.onclick = () => { sel.neo = b.dataset.n; pers(); });
+  document.querySelectorAll('[data-d]').forEach(b => b.onclick = () => { sel.dije = b.dataset.d; pers(); });
+  $('#persImg').src = sel.dije==='San Benito' ? 'img/sq07.jpg' : sel.dije==='Virgen Milagrosa' ? 'img/sq19.jpg' : sel.dije==='Tío Rico' ? 'img/sq13.jpg' : fotosHilo[sel.hilo];
+  const txt = `Hilo ${sel.hilo.toLowerCase()}, neopreno ${sel.neo.toLowerCase()}, balines diamantados en oro laminado${sel.dije==='Sin dije'?'':' y dije de '+sel.dije}.`;
+  $('#resumen').textContent = txt;
+  $('#pedirPers').href = ws('¡Hola DALIAN! ✨ Quiero una manilla personalizada: ' + txt + ' ¿Me cotizas?');
+  $('#pedirPers').target = '_blank';
+}
+
+// promos
+const PR = (window.DALIAN_PROMOS || []).filter(x => x.activa !== false);
+if (!PR.length) { $('#promos').remove(); document.querySelector('a[href="#promos"]').remove(); }
+else $('#listaPromos').innerHTML = PR.map(x => `
+  <article class="promo-c"><img src="${x.imagen}" alt="" loading="lazy"><div>
+    <h3>${x.titulo}</h3><span class="of">${x.oferta}</span><p>${x.condicion}</p>
+    <a href="${ws('¡Hola DALIAN! ✨ Me interesa la promo: ' + x.titulo + '. ¿Me cuentas más?')}" target="_blank" rel="noopener">La quiero →</a>
+  </div></article>`).join('');
+
+filtros(); grid(); pintarBolsa(); pers();
+})();
+</script>
+</body>
+</html>
