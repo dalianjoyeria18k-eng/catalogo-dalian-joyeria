@@ -9,10 +9,10 @@
    ========================================================= */
 
 window.DALIAN_CONFIG = {
-  "whatsapp": "573205304891",
-  "whatsappVisible": "320 530 4891",
-  "whatsapp2": "573196672044",
-  "whatsapp2Visible": "319 667 2044",
+  "whatsapp": "573196672044",
+  "whatsappVisible": "319 667 2044",
+  "whatsapp2": "",
+  "whatsapp2Visible": "",
   "instagram": "@dalianjoyeria18k",
   "tiktok": "@dalian_joyeria",
   "ciudad": "Cúcuta, Norte de Santander",
