@@ -23,18 +23,11 @@ window.DALIAN_CONFIG = {
   }
 };
 
-// Tarifas para calcular domicilios por ciudad y barrio/zona.
-// Se completan aquí cuando DALIAN defina los valores reales.
-// Ejemplo de formato: "Cúcuta|Barrio": 7000
-// Mientras no exista tarifa, el carrito mostrará "Por cotizar" y no cobrará un domicilio estimado.
-window.DALIAN_TARIFAS_DOMICILIO = {};
-
-// Listado de barrios por comuna, basado en la Alcaldía de San José de Cúcuta.
-// Fuente: Observatorio Inmobiliario 2023, "Listado de barrios por comunas", pp. 21-24.
-// https://cucuta.gov.co/wp-content/uploads/2023/09/PRIMER-INFORME-OBSERVATORIO-INMOBILIARIO.pdf
-// Hay nombres repetidos entre comunas (p.ej. La Primavera, Zona Industrial, Trigal del Norte).
-// En esos casos el carrito exige comuna manual para no asignar una tarifa errónea.
-window.DALIAN_TARIFAS_POR_COMUNA = {"1":8000,"2":9000,"3":13000,"4":13000,"5":9000,"6":14000,"7":12000,"8":12000,"9":8000,"10":10000};
+// Barrios de Cúcuta para orientar la comuna de entrega.
+// Fuente: Observatorio Inmobiliario 2023, Alcaldía de Cúcuta (pp. 21-24).
+// Algunos nombres aparecen en más de una comuna, por eso pedimos confirmar.
+// No publicar tarifas internas de domicilio en el código de esta web.
+// El costo y la cobertura se validan directamente con DALIAN antes de cobrar.
 window.DALIAN_BARRIOS_POR_COMUNA = {
   "1": [
     "El Contento",
