@@ -208,6 +208,8 @@ footer{background:var(--negro);color:#b5ab96;padding:64px 0 28px;font-size:14px}
 .envio-direccion label{font-size:12px;color:var(--negro);font-weight:650}
 .envio-direccion input{display:block;box-sizing:border-box;width:100%;height:39px;padding:8px 10px;border:1px solid var(--linea);border-radius:8px;background:#fff;color:var(--negro);font:inherit;font-size:13px;outline-offset:2px}
 .envio-direccion input:focus{outline:2px solid #b49c79}
+.envio-direccion select{display:block;box-sizing:border-box;width:100%;height:39px;padding:8px 10px;border:1px solid var(--linea);border-radius:8px;background:#fff;color:var(--negro);font:inherit;font-size:13px}
+.envio-direccion select:focus{outline:2px solid #b49c79;outline-offset:2px}
 .envio-direccion small{display:block;color:var(--gris);font-size:11px;line-height:1.5;margin-top:2px}
 .resumen-precio .domicilio-pendiente{color:#806947}
 .promo-primera{margin:0 0 12px;padding:11px 12px;border:1px solid rgba(168,137,92,.25);border-radius:9px;background:#fbf8f3}
@@ -643,8 +645,12 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
       <label for="ciudadEntrega">Ciudad de entrega</label>
       <input id="ciudadEntrega" type="text" autocomplete="address-level2" value="Cúcuta" maxlength="80" placeholder="Ej. Cúcuta">
       <label for="zonaEntrega">Barrio o zona de entrega</label>
-      <input id="zonaEntrega" type="text" autocomplete="address-level3" maxlength="100" placeholder="Ej. Caobos, Centro, Atalaya">
-      <small>El domicilio depende de la zona. Te confirmamos el valor antes de pagar.</small>
+      <input id="zonaEntrega" type="text" autocomplete="address-level3" list="barriosCucuta" maxlength="100" placeholder="Ej. Caobos, Centro, Atalaya">
+      <datalist id="barriosCucuta"></datalist>
+      <label for="comunaEntrega">Comuna (si tu barrio no aparece o se repite)</label>
+      <select id="comunaEntrega"><option value="">Detectar automáticamente por barrio</option></select>
+      <small id="comunaAyuda" aria-live="polite">Escribe tu barrio y calcularemos el domicilio si se identifica su comuna.</small>
+      <small>Tarifas para Cúcuta. El valor calculado se confirma antes de pagar; otras ciudades por cotizar.</small>
     </div>
     <div class="promo-primera">
       <label for="primeraCompra"><input type="checkbox" id="primeraCompra"> Es mi primera compra en Dalian (5%)</label>
@@ -771,12 +777,29 @@ function pintarBolsa(){
   const faltantes = Math.max(0, 3 - unidadesPromo);
   const ciudad = $('#ciudadEntrega').value.trim();
   const zona = $('#zonaEntrega').value.trim();
-  const normalizar = str => String(str || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  const tarifas = window.DALIAN_TARIFAS_DOMICILIO || {};
-  const llave = normalizar(ciudad) + '|' + normalizar(zona);
-  const entradaTarifa = Object.entries(tarifas).find(([clave]) => normalizar(clave) === llave);
-  const domicilio = ciudad && zona && entradaTarifa && Number.isFinite(Number(entradaTarifa[1])) && Number(entradaTarifa[1]) >= 0
-    ? Math.round(Number(entradaTarifa[1])) : null;
+  const normalizar = str => String(str || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[.,]/g, '').replace(/\s+/g, ' ').toLowerCase();
+  const enCucuta = ['cucuta','san jose de cucuta'].includes(normalizar(ciudad));
+  const barriosComuna = window.DALIAN_BARRIOS_POR_COMUNA || {};
+  const aliasBarrios = window.DALIAN_ALIAS_BARRIOS || {};
+  const comunasEncontradas = Object.entries(barriosComuna).filter(([comuna, nombres]) =>
+    nombres.some(nombre => normalizar(nombre) === normalizar(zona))).map(([comuna]) => Number(comuna));
+  if (!comunasEncontradas.length) {
+    const alias = Object.entries(aliasBarrios).find(([nombre]) => normalizar(nombre) === normalizar(zona));
+    if (alias) comunasEncontradas.push(Number(alias[1]));
+  }
+  const comunaManual = Number($('#comunaEntrega').value) || null;
+  const comuna = comunaManual || (comunasEncontradas.length === 1 ? comunasEncontradas[0] : null);
+  const tarifasComuna = window.DALIAN_TARIFAS_POR_COMUNA || {};
+  const tarifa = tarifasComuna[comuna];
+  const domicilio = enCucuta && zona && comuna && Number.isFinite(Number(tarifa)) && Number(tarifa) >= 0
+    ? Math.round(Number(tarifa)) : null;
+  const ayuda = $('#comunaAyuda');
+  if (!zona) ayuda.textContent = 'Escribe tu barrio para identificar la comuna y la tarifa.';
+  else if (!enCucuta) ayuda.textContent = 'Las tarifas automáticas son solo para Cúcuta. Te cotizamos el envío por WhatsApp.';
+  else if (comunaManual) ayuda.textContent = 'Comuna ' + comunaManual + ' seleccionada. Confirma que corresponda a tu dirección.';
+  else if (comunasEncontradas.length > 1) ayuda.textContent = 'Este nombre aparece en varias comunas (' + comunasEncontradas.join(', ') + '). Selecciona la tuya.';
+  else if (comuna) ayuda.textContent = 'Barrio identificado en la comuna ' + comuna + '.';
+  else ayuda.textContent = 'No encontramos ese barrio de forma inequívoca. Selecciona su comuna para calcular.';
   const resumen = [];
   if (subtotal) {
     resumen.push(`<div class="fila"><span>Subtotal de piezas con precio</span><strong>${fmt(subtotal)}</strong></div>`);
@@ -794,6 +817,7 @@ function pintarBolsa(){
       resumen.push('<p class="nota">El total final se confirmará por WhatsApp al verificar la zona y los productos pendientes.</p>');
     }
   }
+  if (domicilio !== null) resumen.push('<p class="nota">Tarifa urbana orientativa para la comuna seleccionada; confirma cobertura y dirección antes de pagar.</p>');
   $('#resumenPrecio').innerHTML = resumen.join('');
   const detalleProductos = subtotal ? '\n\nSubtotal: ' + fmt(subtotal) +
     (descuento ? '\n' + (promocion === 'tres' ? 'Descuento 10% (3+ unidades)' : 'Descuento 5% primera compra (por validar)') + ': -' + fmt(descuento) : '') +
@@ -801,6 +825,7 @@ function pintarBolsa(){
   const validacion = promocion === 'primera' ? '\nSolicito validar mi descuento de primera compra.' : '';
   const detalleEntrega = '\n\nCiudad: ' + (ciudad || 'Sin indicar') +
     '\nBarrio o zona: ' + (zona || 'Sin indicar') +
+    '\nComuna: ' + (comuna ? String(comuna) : 'Por confirmar') +
     '\nDomicilio: ' + (domicilio === null ? 'Por cotizar según zona' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio)));
   const resultado = domicilio !== null && !haySinPrecio
     ? '\nTotal estimado con domicilio: ' + fmt(total + domicilio)
@@ -814,6 +839,12 @@ function pintarBolsa(){
 $('#abrirBolsa').onclick = () => $('#drawer').classList.add('on');
 $('#cerrarBolsa').onclick = () => $('#drawer').classList.remove('on');
 ['#ciudadEntrega','#zonaEntrega'].forEach(sel => $(sel).addEventListener('input', pintarBolsa));
+$('#comunaEntrega').addEventListener('change', pintarBolsa);
+const nombresBarrios = [...new Set(Object.values(window.DALIAN_BARRIOS_POR_COMUNA || {}).flat())]
+  .sort((a,b) => a.localeCompare(b,'es'));
+$('#barriosCucuta').innerHTML = nombresBarrios.map(nombre => '<option value="' + nombre.replace(/"/g, '&quot;') + '"></option>').join('');
+const comunasDisponibles = Object.keys(window.DALIAN_TARIFAS_POR_COMUNA || {}).map(Number).sort((a,b) => a-b);
+$('#comunaEntrega').innerHTML += comunasDisponibles.map(c => '<option value="' + c + '">Comuna ' + c + ' · ' + fmt(window.DALIAN_TARIFAS_POR_COMUNA[c]) + '</option>').join('');
 $('#primeraCompra').addEventListener('change', pintarBolsa);
 
 // personaliza
