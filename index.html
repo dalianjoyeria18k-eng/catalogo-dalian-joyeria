@@ -212,6 +212,7 @@ footer{background:var(--negro);color:#b5ab96;padding:64px 0 28px;font-size:14px}
 .envio-direccion select:focus{outline:2px solid #b49c79;outline-offset:2px}
 .envio-direccion small{display:block;color:var(--gris);font-size:11px;line-height:1.5;margin-top:2px}
 .resumen-precio .domicilio-pendiente{color:#806947}
+.resumen-precio .envio-gratis,.resumen-precio .envio-gratis strong{color:#657d42}
 .promo-primera{margin:0 0 12px;padding:11px 12px;border:1px solid rgba(168,137,92,.25);border-radius:9px;background:#fbf8f3}
 .promo-primera label{display:flex;align-items:center;gap:9px;color:#584632;font-size:13px;font-weight:650;cursor:pointer}
 .promo-primera input{width:17px;height:17px;accent-color:#a68458;flex:none}
@@ -496,7 +497,7 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
       <span class="eyebrow">La colección</span>
       <h2>Piezas que cuentan tu historia</h2>
       <p class="lead">Escoge tu favorita y agrégala a tu pedido. Lo confirmamos contigo por WhatsApp.</p>
-      <p class="promo-descuento">✦ 5% en tu primera compra o 10% desde 3 Topos Virgen de Guadalupe / Gucci · No acumulables · Domicilio según zona ✦</p>
+      <p class="promo-descuento">✦ 5% en primera compra o 10% desde 3 topitos participantes · Descuentos no acumulables · ¡Domicilio gratis en Cúcuta desde 3! ✦</p>
     </div>
     <div class="filtros" id="filtros"></div>
     <div class="grid" id="grid"></div>
@@ -793,6 +794,10 @@ function pintarBolsa(){
   const tarifa = tarifasComuna[comuna];
   const domicilio = enCucuta && zona && comuna && Number.isFinite(Number(tarifa)) && Number(tarifa) >= 0
     ? Math.round(Number(tarifa)) : null;
+  // Envío gratis con 3+ unidades de modelos participantes, solo en Cúcuta.
+  // Se aplica además del descuento del 10%, y solo si conocemos la tarifa real de la zona.
+  const envioGratis = enCucuta && unidadesPromo >= 3;
+  const domicilioCobrado = domicilio === null ? null : (envioGratis ? 0 : domicilio);
   const ayuda = $('#comunaAyuda');
   if (!zona) ayuda.textContent = 'Escribe tu barrio para identificar la comuna y la tarifa.';
   else if (!enCucuta) ayuda.textContent = 'Las tarifas automáticas son solo para Cúcuta. Te cotizamos el envío por WhatsApp.';
@@ -808,11 +813,12 @@ function pintarBolsa(){
   }
   if (faltantes && unidadesPromo && cods.length) resumen.push(`<p class="tip">Agrega ${faltantes} ${faltantes===1?'topito participante más':'topitos participantes más'} para recibir 10% en esos modelos.</p>`);
   if (haySinPrecio) resumen.push('<p class="nota">Los artículos sin precio publicado se cotizan por WhatsApp y no cuentan para el descuento.</p>');
-  if (!cods.length) resumen.push('<p class="tip">5% en tu primera compra o 10% desde 3 unidades de nuestros dos modelos participantes.</p>');
+  if (!cods.length) resumen.push('<p class="tip">5% en la primera compra o 10% y domicilio gratis en Cúcuta desde 3 topitos participantes.</p>');
+  if (envioGratis && domicilio === null) resumen.push('<p class="tip">¡Tu compra cumple para domicilio gratis en Cúcuta! Ingresa tu barrio y confirma la comuna para activarlo.</p>');
   if (cods.length) {
-    resumen.push(`<div class="fila ${domicilio === null ? 'domicilio-pendiente' : ''}"><span>Domicilio</span><strong>${domicilio === null ? 'Por cotizar según zona' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio))}</strong></div>`);
-    if (domicilio !== null && !haySinPrecio) {
-      resumen.push(`<div class="fila total"><span>Total con domicilio</span><strong>${fmt(total + domicilio)}</strong></div>`);
+    resumen.push(`<div class="fila ${domicilioCobrado === null ? 'domicilio-pendiente' : (envioGratis ? 'envio-gratis' : '')}"><span>Domicilio</span><strong>${domicilioCobrado === null ? 'Por cotizar según zona' : (envioGratis ? 'GRATIS (ahorras ' + fmt(domicilio) + ')' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio)))}</strong></div>`);
+    if (domicilioCobrado !== null && !haySinPrecio) {
+      resumen.push(`<div class="fila total"><span>Total con domicilio</span><strong>${fmt(total + domicilioCobrado)}</strong></div>`);
     } else {
       resumen.push('<p class="nota">El total final se confirmará por WhatsApp al verificar la zona y los productos pendientes.</p>');
     }
@@ -826,9 +832,9 @@ function pintarBolsa(){
   const detalleEntrega = '\n\nCiudad: ' + (ciudad || 'Sin indicar') +
     '\nBarrio o zona: ' + (zona || 'Sin indicar') +
     '\nComuna: ' + (comuna ? String(comuna) : 'Por confirmar') +
-    '\nDomicilio: ' + (domicilio === null ? 'Por cotizar según zona' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio)));
-  const resultado = domicilio !== null && !haySinPrecio
-    ? '\nTotal estimado con domicilio: ' + fmt(total + domicilio)
+    '\nDomicilio: ' + (domicilioCobrado === null ? 'Por cotizar según zona' : (envioGratis ? 'GRATIS por 3+ unidades participantes (tarifa habitual: ' + fmt(domicilio) + ')' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio))));
+  const resultado = domicilioCobrado !== null && !haySinPrecio
+    ? '\nTotal estimado con domicilio: ' + fmt(total + domicilioCobrado)
     : '\nPor favor, confirmar domicilio y total final.';
   const msg = '¡Hola DALIAN! ✨ Quiero hacer este pedido:\n' + lineas.join('\n') +
     detalleProductos + validacion + detalleEntrega + resultado +
