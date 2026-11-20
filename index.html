@@ -204,6 +204,15 @@ footer{background:var(--negro);color:#b5ab96;padding:64px 0 28px;font-size:14px}
 .cant button{width:28px;height:28px;border-radius:50%;border:1px solid var(--linea)}
 .drawer .fin{padding:20px;border-top:1px solid var(--linea)}
 .drawer .fin .btn{width:100%;justify-content:center}
+.resumen-precio{margin-bottom:15px;font-size:13px;color:var(--gris);line-height:1.5}
+.resumen-precio .fila{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.resumen-precio .fila strong{font-weight:700;color:var(--negro)}
+.resumen-precio .ahorro,.resumen-precio .ahorro strong{color:#6b7d44}
+.resumen-precio .total{padding-top:10px;margin-top:9px;border-top:1px solid var(--linea);font-size:15px;font-weight:700}
+.resumen-precio .nota{margin:8px 0 0;font-size:11.5px;line-height:1.55}
+.resumen-precio .tip{padding:9px 11px;background:#f2eadc;border-radius:8px;color:#796044;font-size:12px}
+.promo-descuento{display:inline-block;margin:14px 0 20px;padding:10px 16px;border:1px solid rgba(162,130,85,.34);border-radius:999px;background:#f8f2e8;color:#795f40;font-size:12px;line-height:1.5;letter-spacing:.01em}
+@media(max-width:500px){.promo-descuento{border-radius:14px}}
 .vacio{color:var(--gris);text-align:center;padding:40px 0;font-size:14px}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(120px);background:var(--negro);color:var(--oro-claro);padding:12px 22px;border-radius:999px;font-size:13px;z-index:80;transition:.3s}
 .toast.on{transform:translateX(-50%)}
@@ -474,6 +483,7 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
       <span class="eyebrow">La colección</span>
       <h2>Piezas que cuentan tu historia</h2>
       <p class="lead">Escoge tu favorita y agrégala a tu pedido. Lo confirmamos contigo por WhatsApp.</p>
+      <p class="promo-descuento">✦ 5% de descuento automático desde 3 unidades con precio publicado · Domicilio gratis solo en Cúcuta ✦</p>
     </div>
     <div class="filtros" id="filtros"></div>
     <div class="grid" id="grid"></div>
@@ -618,6 +628,7 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
   <header><h3>MI PEDIDO</h3><button id="cerrarBolsa" style="color:#fff;font-size:24px" aria-label="Cerrar">×</button></header>
   <div class="items" id="items"></div>
   <div class="fin">
+    <div id="resumenPrecio" class="resumen-precio" aria-live="polite"></div>
     <a href="#" class="btn btn-ws" id="enviarPedido">Enviar pedido por WhatsApp</a>
   </div>
 </aside>
@@ -718,10 +729,38 @@ function pintarBolsa(){
     : '<p class="vacio">Tu pedido está vacío.<br>Agrega piezas desde la colección.</p>';
   document.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { const c=b.dataset.m; bolsa[c]--; if(bolsa[c]<=0) delete bolsa[c]; guardar(); pintarBolsa(); });
   document.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { bolsa[b.dataset.p]++; guardar(); pintarBolsa(); });
-  let total = 0, conPrecio = true;
-  const lineas = cods.map(c => { const p = P.find(x=>x.codigo===c); if (p.precio) total += p.precio*bolsa[c]; else conPrecio = false;
-    return `• ${bolsa[c]} x ${p.nombre} (${p.codigo})`; });
-  const msg = '¡Hola DALIAN! ✨ Quiero hacer este pedido:\n' + lineas.join('\n') + (conPrecio && total ? '\nTotal aprox: ' + fmt(total) : '') + '\n\nMi ciudad es: ';
+  // El descuento es sobre productos con precio publicado y se activa desde 3 unidades.
+  // Las piezas de precio por consultar se cotizan aparte y no cuentan para el descuento.
+  let subtotal = 0, unidadesConPrecio = 0, haySinPrecio = false;
+  const lineas = cods.map(c => {
+    const p = P.find(x=>x.codigo===c);
+    if (p.precio) {
+      subtotal += Number(p.precio) * bolsa[c];
+      unidadesConPrecio += bolsa[c];
+    } else haySinPrecio = true;
+    return `• ${bolsa[c]} x ${p.nombre} (${p.codigo})`;
+  });
+  const aplicaDescuento = unidadesConPrecio >= 3;
+  const descuento = aplicaDescuento ? Math.round(subtotal * 0.05) : 0;
+  const total = subtotal - descuento;
+  const faltantes = Math.max(0, 3 - unidadesConPrecio);
+  const resumen = [];
+  if (subtotal) {
+    resumen.push(`<div class="fila"><span>Subtotal de piezas con precio</span><strong>${fmt(subtotal)}</strong></div>`);
+    if (aplicaDescuento) resumen.push(`<div class="fila ahorro"><span>Descuento automático (5%)</span><strong>−${fmt(descuento)}</strong></div>`);
+    resumen.push(`<div class="fila total"><span>${haySinPrecio?'Total parcial':'Total estimado'}</span><strong>${fmt(total)}</strong></div>`);
+  }
+  if (faltantes && cods.length) resumen.push(`<p class="tip">Agrega ${faltantes} ${faltantes===1?'unidad más':'unidades más'} con precio para recibir 5% de descuento.</p>`);
+  if (haySinPrecio) resumen.push('<p class="nota">Los artículos sin precio publicado se cotizan por WhatsApp y no cuentan para el descuento.</p>');
+  if (!cods.length) resumen.push('<p class="tip">Compra 3 o más unidades con precio publicado y recibe 5% de descuento.</p>');
+  $('#resumenPrecio').innerHTML = resumen.join('');
+  const detallePago = subtotal
+    ? (aplicaDescuento
+      ? '\n\nSubtotal (piezas con precio): ' + fmt(subtotal) + '\nDescuento 5%: -' + fmt(descuento) + '\n' + (haySinPrecio?'Total parcial':'Total estimado') + ': ' + fmt(total)
+      : '\n\n' + (haySinPrecio?'Total parcial':'Total estimado') + ' (piezas con precio): ' + fmt(total))
+    : '';
+  const pendiente = haySinPrecio ? '\nHay productos por cotizar; confirmar el total final.' : '';
+  const msg = '¡Hola DALIAN! ✨ Quiero hacer este pedido:\n' + lineas.join('\n') + detallePago + pendiente + '\n\nMi ciudad es: ';
   $('#enviarPedido').href = cods.length ? ws(msg) : '#';
   $('#enviarPedido').target = '_blank';
 }
