@@ -29,7 +29,7 @@ window.DALIAN_CONFIG = {
 // Las tarifas urbanas sirven para calcular un estimado en el carrito.
 // IMPORTANTE: esta configuración cliente es pública. Antes de cobrar en línea,
 // un servidor debe verificar comuna, dirección, cobertura y tarifa.
-window.DALIAN_TARIFAS_POR_COMUNA = {1:8000,2:9000,3:13000,4:13000,5:9000,6:14000,7:12000,8:12000,9:8000,10:10000};
+window.DALIAN_TARIFAS_POR_COMUNA = {1:8000,2:9000,3:12000,4:12000,5:9000,6:12000,7:12000,8:12000,9:6000,10:10000};
 window.DALIAN_BARRIOS_POR_COMUNA = {
   "1": [
     "El Contento",
