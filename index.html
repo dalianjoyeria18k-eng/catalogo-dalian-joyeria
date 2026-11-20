@@ -648,10 +648,12 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
       <label for="zonaEntrega">Barrio o zona de entrega</label>
       <input id="zonaEntrega" type="text" autocomplete="address-level3" list="barriosCucuta" maxlength="100" placeholder="Ej. Caobos, Centro, Atalaya">
       <datalist id="barriosCucuta"></datalist>
-      <label for="comunaEntrega">Comuna (si tu barrio no aparece o se repite)</label>
+      <label for="comunaEntrega">Comuna de entrega</label>
       <select id="comunaEntrega"><option value="">Detectar automáticamente por barrio</option></select>
-      <small id="comunaAyuda" aria-live="polite">Escribe tu barrio y calcularemos el domicilio si se identifica su comuna.</small>
-      <small>Tarifas para Cúcuta. El valor calculado se confirma antes de pagar; otras ciudades por cotizar.</small>
+      <small id="comunaAyuda" aria-live="polite">Escribe tu barrio y confirma la comuna si hace falta.</small>
+      <label for="direccionEntrega">Dirección exacta de entrega</label>
+      <input id="direccionEntrega" type="text" autocomplete="street-address" maxlength="150" placeholder="Calle/carrera, número, torre y apto.">
+      <small>El domicilio se calcula según tu zona; verificaremos la dirección y el valor antes de confirmar el pago.</small>
     </div>
     <div class="promo-primera">
       <label for="primeraCompra"><input type="checkbox" id="primeraCompra"> Es mi primera compra en Dalian (5%)</label>
@@ -778,6 +780,7 @@ function pintarBolsa(){
   const faltantes = Math.max(0, 3 - unidadesPromo);
   const ciudad = $('#ciudadEntrega').value.trim();
   const zona = $('#zonaEntrega').value.trim();
+  const direccion = $('#direccionEntrega').value.trim();
   const normalizar = str => String(str || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[.,]/g, '').replace(/\s+/g, ' ').toLowerCase();
   const enCucuta = ['cucuta','san jose de cucuta'].includes(normalizar(ciudad));
   const barriosComuna = window.DALIAN_BARRIOS_POR_COMUNA || {};
@@ -789,7 +792,10 @@ function pintarBolsa(){
     if (alias) comunasEncontradas.push(Number(alias[1]));
   }
   const comunaManual = Number($('#comunaEntrega').value) || null;
-  const comuna = comunaManual || (comunasEncontradas.length === 1 ? comunasEncontradas[0] : null);
+  // Impide utilizar una comuna que no coincida con un barrio registrado.
+  // Si el barrio no consta en la base, toda estimación queda sujeta a verificación.
+  const comunaIncompatible = Boolean(comunaManual && comunasEncontradas.length && !comunasEncontradas.includes(comunaManual));
+  const comuna = comunaIncompatible ? null : (comunaManual || (comunasEncontradas.length === 1 ? comunasEncontradas[0] : null));
   const tarifasComuna = window.DALIAN_TARIFAS_POR_COMUNA || {};
   const tarifa = tarifasComuna[comuna];
   const domicilio = enCucuta && zona && comuna && Number.isFinite(Number(tarifa)) && Number(tarifa) >= 0
@@ -801,7 +807,9 @@ function pintarBolsa(){
   const ayuda = $('#comunaAyuda');
   if (!zona) ayuda.textContent = 'Escribe tu barrio para identificar la comuna y la tarifa.';
   else if (!enCucuta) ayuda.textContent = 'Las tarifas automáticas son solo para Cúcuta. Te cotizamos el envío por WhatsApp.';
-  else if (comunaManual) ayuda.textContent = 'Comuna ' + comunaManual + ' seleccionada. Confirma que corresponda a tu dirección.';
+  else if (comunaIncompatible) ayuda.textContent = 'El barrio indicado no coincide con esa comuna. Corrígela para calcular el domicilio.';
+  else if (comunaManual && !comunasEncontradas.length) ayuda.textContent = 'Comuna ' + comunaManual + ' seleccionada: tarifa provisional, sujeta a verificar la dirección.';
+  else if (comunaManual) ayuda.textContent = 'Comuna ' + comunaManual + ' seleccionada. Verificaremos la dirección antes de cobrar.';
   else if (comunasEncontradas.length > 1) ayuda.textContent = 'Este nombre aparece en varias comunas (' + comunasEncontradas.join(', ') + '). Selecciona la tuya.';
   else if (comuna) ayuda.textContent = 'Barrio identificado en la comuna ' + comuna + '.';
   else ayuda.textContent = 'No encontramos ese barrio de forma inequívoca. Selecciona su comuna para calcular.';
@@ -816,14 +824,14 @@ function pintarBolsa(){
   if (!cods.length) resumen.push('<p class="tip">5% en la primera compra o 10% y domicilio gratis en Cúcuta desde 3 topitos participantes.</p>');
   if (envioGratis && domicilio === null) resumen.push('<p class="tip">¡Tu compra cumple para domicilio gratis en Cúcuta! Ingresa tu barrio y confirma la comuna para activarlo.</p>');
   if (cods.length) {
-    resumen.push(`<div class="fila ${domicilioCobrado === null ? 'domicilio-pendiente' : (envioGratis ? 'envio-gratis' : '')}"><span>Domicilio</span><strong>${domicilioCobrado === null ? 'Por cotizar según zona' : (envioGratis ? 'GRATIS (ahorras ' + fmt(domicilio) + ')' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio)))}</strong></div>`);
+    resumen.push(`<div class="fila ${domicilioCobrado === null ? 'domicilio-pendiente' : (envioGratis ? 'envio-gratis' : '')}"><span>Domicilio</span><strong>${domicilioCobrado === null ? 'Por confirmar según zona' : (envioGratis ? 'GRATIS' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio)))}</strong></div>`);
     if (domicilioCobrado !== null && !haySinPrecio) {
       resumen.push(`<div class="fila total"><span>Total con domicilio</span><strong>${fmt(total + domicilioCobrado)}</strong></div>`);
     } else {
       resumen.push('<p class="nota">El total final se confirmará por WhatsApp al verificar la zona y los productos pendientes.</p>');
     }
   }
-  if (domicilio !== null) resumen.push('<p class="nota">Tarifa urbana orientativa para la comuna seleccionada; confirma cobertura y dirección antes de pagar.</p>');
+  if (domicilio !== null) resumen.push('<p class="nota">Valor estimado de entrega: verificaremos dirección y cobertura antes de aceptar el pago.</p>');
   $('#resumenPrecio').innerHTML = resumen.join('');
   const detalleProductos = subtotal ? '\n\nSubtotal: ' + fmt(subtotal) +
     (descuento ? '\n' + (promocion === 'tres' ? 'Descuento 10% (3+ unidades)' : 'Descuento 5% primera compra (por validar)') + ': -' + fmt(descuento) : '') +
@@ -832,7 +840,9 @@ function pintarBolsa(){
   const detalleEntrega = '\n\nCiudad: ' + (ciudad || 'Sin indicar') +
     '\nBarrio o zona: ' + (zona || 'Sin indicar') +
     '\nComuna: ' + (comuna ? String(comuna) : 'Por confirmar') +
-    '\nDomicilio: ' + (domicilioCobrado === null ? 'Por cotizar según zona' : (envioGratis ? 'GRATIS por 3+ unidades participantes (tarifa habitual: ' + fmt(domicilio) + ')' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio))));
+    '\nDirección de entrega: ' + (direccion || 'Pendiente de confirmar') +
+    '\nDomicilio estimado: ' + (domicilioCobrado === null ? 'Por confirmar según zona' : (envioGratis ? 'GRATIS por 3+ unidades participantes' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio)))) +
+    '\nPor favor, verificar comuna y dirección antes del cobro.';
   const resultado = domicilioCobrado !== null && !haySinPrecio
     ? '\nTotal estimado con domicilio: ' + fmt(total + domicilioCobrado)
     : '\nPor favor, confirmar domicilio y total final.';
@@ -844,13 +854,13 @@ function pintarBolsa(){
 }
 $('#abrirBolsa').onclick = () => $('#drawer').classList.add('on');
 $('#cerrarBolsa').onclick = () => $('#drawer').classList.remove('on');
-['#ciudadEntrega','#zonaEntrega'].forEach(sel => $(sel).addEventListener('input', pintarBolsa));
+['#ciudadEntrega','#zonaEntrega','#direccionEntrega'].forEach(sel => $(sel).addEventListener('input', pintarBolsa));
 $('#comunaEntrega').addEventListener('change', pintarBolsa);
 const nombresBarrios = [...new Set(Object.values(window.DALIAN_BARRIOS_POR_COMUNA || {}).flat())]
   .sort((a,b) => a.localeCompare(b,'es'));
 $('#barriosCucuta').innerHTML = nombresBarrios.map(nombre => '<option value="' + nombre.replace(/"/g, '&quot;') + '"></option>').join('');
 const comunasDisponibles = Object.keys(window.DALIAN_TARIFAS_POR_COMUNA || {}).map(Number).sort((a,b) => a-b);
-$('#comunaEntrega').innerHTML += comunasDisponibles.map(c => '<option value="' + c + '">Comuna ' + c + ' · ' + fmt(window.DALIAN_TARIFAS_POR_COMUNA[c]) + '</option>').join('');
+$('#comunaEntrega').innerHTML += comunasDisponibles.map(c => '<option value="' + c + '">Comuna ' + c + '</option>').join('');
 $('#primeraCompra').addEventListener('change', pintarBolsa);
 
 // personaliza
