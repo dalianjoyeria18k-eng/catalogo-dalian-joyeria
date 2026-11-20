@@ -427,6 +427,17 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
 }
 @media(prefers-reduced-motion:reduce){.hero-editorial *{scroll-behavior:auto}}
 
+
+/* DALIAN · Pago por enlace Nequi Negocios, sujeto a confirmación manual. */
+.pago-nequi{margin-top:14px;padding:17px 15px;border:1px solid #dfd2eb;border-radius:14px;background:#faf7fd}
+.pago-nequi h4{font-size:14px;font-weight:750;letter-spacing:.015em;margin:0 0 6px;color:#281445}
+.pago-nequi p,.pago-nequi small{display:block;font-size:12px;line-height:1.55;color:#51435a;margin:7px 0}
+.pago-nequi .nequi-verificacion{display:flex;align-items:flex-start;gap:9px;font-size:12px;line-height:1.5;color:#32203d;margin:12px 0}
+.pago-nequi .nequi-verificacion input{flex:0 0 auto;width:17px;height:17px;margin-top:1px;accent-color:#5d2d91}
+.pago-nequi .btn-nequi{background:#5d2d91;color:#fff;width:100%;text-align:center;margin:11px 0 7px}
+.pago-nequi .btn-nequi:hover{background:#492372}
+.pago-nequi .btn-nequi.desactivado{background:#afa7b7;opacity:.78;cursor:not-allowed;pointer-events:none}
+.pago-nequi .nequi-monto{font-size:13px;font-weight:700;color:#281445}
 </style>
 </head>
 <body>
@@ -661,6 +672,18 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
     </div>
     <div id="resumenPrecio" class="resumen-precio" aria-live="polite"></div>
     <a href="#" class="btn btn-ws" id="enviarPedido">Enviar pedido por WhatsApp</a>
+    <section class="pago-nequi" aria-labelledby="nequiTitulo">
+      <h4 id="nequiTitulo">Paga en línea con Nequi Negocios</h4>
+      <p>1. Envía tu pedido por WhatsApp y espera nuestra confirmación de disponibilidad, dirección y total definitivo.</p>
+      <p id="nequiMonto" class="nequi-monto" aria-live="polite">Agrega productos y selecciona tu zona para conocer el total.</p>
+      <label class="nequi-verificacion" for="nequiConfirmado">
+        <input id="nequiConfirmado" type="checkbox" disabled>
+        <span>Ya confirmé con DALIAN por WhatsApp el pedido, el monto y el domicilio.</span>
+      </label>
+      <a class="btn btn-nequi desactivado" id="abrirNequi" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" tabindex="-1">Ir al pago seguro</a>
+      <small>El enlace de Nequi Negocios no recibe automáticamente el total calculado aquí. Verifica que el monto en la plataforma coincida exactamente con el confirmado por DALIAN; si no coincide, no pagues.</small>
+      <small>Tu pedido no se marca como pagado automáticamente. Confirmaremos la transacción en Nequi Negocios antes de entregarlo.</small>
+    </section>
   </div>
 </aside>
 <div class="toast" id="toast"></div>
@@ -672,6 +695,8 @@ const C = window.DALIAN_CONFIG, CATS = window.DALIAN_CATEGORIAS, P = window.DALI
 const $ = s => document.querySelector(s);
 const fmt = v => v ? '$' + Number(v).toLocaleString('es-CO') : '';
 const ws = msg => 'https://wa.me/' + C.whatsapp + '?text=' + encodeURIComponent(msg);
+const LINK_NEQUI_NEGOCIOS = 'https://checkout.nequi.wompi.co/l/IjsdKU'; // Enlace facilitado por el comercio; verificar vigencia y modalidad de monto en Nequi Negocios.
+let firmaAnteriorPago = null;
 
 // config
 if (C.promo && C.promo.activa) $('#promo').textContent = C.promo.texto; else $('#promo').remove();
@@ -851,6 +876,29 @@ function pintarBolsa(){
     (haySinPrecio ? '\nTambién hay piezas pendientes de cotización.' : '');
   $('#enviarPedido').href = cods.length ? ws(msg) : '#';
   $('#enviarPedido').target = '_blank';
+  // El enlace de pago nunca equivale a cobro automático: primer paso, validar pedido por WhatsApp.
+  // Requerimos precios completos, domicilio definido y dirección antes de permitir abrirlo.
+  const firmaActualPago = JSON.stringify({
+    articulos:cods.map(c=>[c,bolsa[c]]),primeraCompra,ciudad,zona,direccion,comunaManual
+  });
+  if (firmaActualPago !== firmaAnteriorPago) {
+    firmaAnteriorPago = firmaActualPago;
+    $('#nequiConfirmado').checked = false;
+  }
+  const totalCotizable = cods.length > 0 && !haySinPrecio && subtotal > 0 &&
+    domicilioCobrado !== null && !comunaIncompatible && direccion.trim().length >= 6;
+  const montoEstimado = totalCotizable ? total + domicilioCobrado : null;
+  $('#nequiMonto').textContent = totalCotizable
+    ? 'Total calculado: ' + fmt(montoEstimado) + ' · Confirma el monto definitivo por WhatsApp antes de pagar.'
+    : 'Para pagar, incluye solo artículos con precio e indica barrio, comuna y dirección válidos en Cúcuta.';
+  $('#nequiConfirmado').disabled = !totalCotizable;
+  if (!totalCotizable) $('#nequiConfirmado').checked = false;
+  const autorizado = totalCotizable && $('#nequiConfirmado').checked;
+  const enlaceNequi = $('#abrirNequi');
+  enlaceNequi.href = autorizado ? LINK_NEQUI_NEGOCIOS : '#';
+  enlaceNequi.tabIndex = autorizado ? 0 : -1;
+  enlaceNequi.setAttribute('aria-disabled', String(!autorizado));
+  enlaceNequi.classList.toggle('desactivado', !autorizado);
 }
 $('#abrirBolsa').onclick = () => $('#drawer').classList.add('on');
 $('#cerrarBolsa').onclick = () => $('#drawer').classList.remove('on');
@@ -862,6 +910,12 @@ $('#barriosCucuta').innerHTML = nombresBarrios.map(nombre => '<option value="' +
 const comunasDisponibles = Object.keys(window.DALIAN_TARIFAS_POR_COMUNA || {}).map(Number).sort((a,b) => a-b);
 $('#comunaEntrega').innerHTML += comunasDisponibles.map(c => '<option value="' + c + '">Comuna ' + c + '</option>').join('');
 $('#primeraCompra').addEventListener('change', pintarBolsa);
+$('#nequiConfirmado').addEventListener('change', pintarBolsa);
+$('#abrirNequi').addEventListener('click', e => {
+  if ($('#abrirNequi').getAttribute('aria-disabled') === 'true') { e.preventDefault(); return; }
+  // No confiar en valores calculados en el navegador: Nequi debe mostrar el monto confirmado con el comercio.
+  if (!window.confirm('Vas a abrir un enlace de Nequi Negocios. El valor del carrito NO se envía automáticamente al enlace. Comprueba que el monto que vas a pagar coincida con el confirmado por DALIAN. Si aparece otro monto, no pagues. ¿Quieres continuar?')) e.preventDefault();
+});
 
 // personaliza
 const hilos = [['Negro','#111'],['Rojo','#c0272d'],['Verde','#1f9a4a'],['Gris','#8f9396'],['Dorado','#d4b06a'],['Azul','#1d3f8f'],['Blanco','#f4f1ea']];
