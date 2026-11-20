@@ -438,6 +438,16 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
 .pago-nequi .btn-nequi:hover{background:#492372}
 .pago-nequi .btn-nequi.desactivado{background:#afa7b7;opacity:.78;cursor:not-allowed;pointer-events:none}
 .pago-nequi .nequi-monto{font-size:13px;font-weight:700;color:#281445}
+
+/* Carrito móvil: el panel tiene su propio desplazamiento, sin mover la página de fondo. */
+body.carrito-bloqueado{position:fixed;left:0;right:0;width:100%;overflow:hidden}
+.fondo-carrito{position:fixed;inset:0;z-index:69;background:rgba(17,12,8,.44);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility .25s ease;touch-action:none}
+.fondo-carrito.on{opacity:1;visibility:visible;pointer-events:auto}
+.drawer{height:100vh;height:100dvh;bottom:auto;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.drawer header{position:sticky;top:0;z-index:2;flex-shrink:0}
+.drawer .items{flex:none;overflow:visible}
+.drawer .fin{flex:none;padding-bottom:calc(20px + env(safe-area-inset-bottom, 0px))}
+@media (max-width:600px){.drawer{width:100%}.drawer header{padding:14px 18px}.drawer .items{padding:10px 18px}.drawer .fin{padding-left:18px;padding-right:18px}}
 </style>
 </head>
 <body>
@@ -649,7 +659,8 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
 
 <div class="capa" id="capa"><div class="modal" id="modal"></div></div>
 
-<aside class="drawer" id="drawer" aria-label="Mi pedido">
+<div class="fondo-carrito" id="fondoCarrito" aria-hidden="true"></div>
+<aside class="drawer" id="drawer" aria-label="Mi pedido" role="dialog" aria-modal="true">
   <header><h3>MI PEDIDO</h3><button id="cerrarBolsa" style="color:#fff;font-size:24px" aria-label="Cerrar">×</button></header>
   <div class="items" id="items"></div>
   <div class="fin">
@@ -768,7 +779,7 @@ function abrir(cod){
 }
 function cerrar(){ $('#capa').classList.remove('on'); }
 $('#capa').onclick = e => { if (e.target.id === 'capa') cerrar(); };
-document.addEventListener('keydown', e => { if (e.key === 'Escape'){ cerrar(); $('#drawer').classList.remove('on'); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ cerrar(); cerrarCarrito(); } });
 
 // bolsa (pedido)
 let bolsa = {};
@@ -888,9 +899,18 @@ function pintarBolsa(){
   const totalCotizable = cods.length > 0 && !haySinPrecio && subtotal > 0 &&
     domicilioCobrado !== null && !comunaIncompatible && direccion.trim().length >= 6;
   const montoEstimado = totalCotizable ? total + domicilioCobrado : null;
+  const faltantesPago = [];
+  if (!cods.length) faltantesPago.push('agrega al menos un producto');
+  if (haySinPrecio) faltantesPago.push('solicita primero cotización de las piezas sin precio');
+  if (!enCucuta) faltantesPago.push('confirma la entrega fuera de Cúcuta por WhatsApp');
+  if (!zona.trim()) faltantesPago.push('escribe el barrio');
+  if (comunaIncompatible) faltantesPago.push('corrige el barrio o la comuna');
+  else if (!comuna) faltantesPago.push('selecciona la comuna');
+  if (direccion.trim().length < 6) faltantesPago.push('escribe la dirección exacta (calle/carrera y número)');
+  if (domicilioCobrado === null && enCucuta && zona.trim() && comuna && !comunaIncompatible) faltantesPago.push('confirma la tarifa de entrega');
   $('#nequiMonto').textContent = totalCotizable
     ? 'Total calculado: ' + fmt(montoEstimado) + ' · Confirma el monto definitivo por WhatsApp antes de pagar.'
-    : 'Para pagar, incluye solo artículos con precio e indica barrio, comuna y dirección válidos en Cúcuta.';
+    : 'Para habilitar el pago: ' + faltantesPago.join('; ') + '.';
   $('#nequiConfirmado').disabled = !totalCotizable;
   if (!totalCotizable) $('#nequiConfirmado').checked = false;
   const autorizado = totalCotizable && $('#nequiConfirmado').checked;
@@ -900,8 +920,31 @@ function pintarBolsa(){
   enlaceNequi.setAttribute('aria-disabled', String(!autorizado));
   enlaceNequi.classList.toggle('desactivado', !autorizado);
 }
-$('#abrirBolsa').onclick = () => $('#drawer').classList.add('on');
-$('#cerrarBolsa').onclick = () => $('#drawer').classList.remove('on');
+// Fijar la página de fondo (especialmente iOS Safari) y dejar desplazar solo el carrito.
+let scrollPrevioCarrito = 0;
+function abrirCarrito(){
+  if ($('#drawer').classList.contains('on')) return;
+  scrollPrevioCarrito = window.scrollY || document.documentElement.scrollTop || 0;
+  document.body.style.top = '-' + scrollPrevioCarrito + 'px';
+  document.body.classList.add('carrito-bloqueado');
+  $('#fondoCarrito').classList.add('on');
+  $('#drawer').classList.add('on');
+  $('#drawer').scrollTop = 0;
+}
+function cerrarCarrito(){
+  if (!$('#drawer').classList.contains('on')) return;
+  $('#drawer').classList.remove('on');
+  $('#fondoCarrito').classList.remove('on');
+  document.body.classList.remove('carrito-bloqueado');
+  document.body.style.top = '';
+  const scrollAnterior = document.documentElement.style.scrollBehavior;
+  document.documentElement.style.scrollBehavior = 'auto';
+  window.scrollTo(0, scrollPrevioCarrito);
+  document.documentElement.style.scrollBehavior = scrollAnterior;
+}
+$('#abrirBolsa').onclick = abrirCarrito;
+$('#cerrarBolsa').onclick = cerrarCarrito;
+$('#fondoCarrito').onclick = cerrarCarrito;
 ['#ciudadEntrega','#zonaEntrega','#direccionEntrega'].forEach(sel => $(sel).addEventListener('input', pintarBolsa));
 $('#comunaEntrega').addEventListener('change', pintarBolsa);
 const nombresBarrios = [...new Set(Object.values(window.DALIAN_BARRIOS_POR_COMUNA || {}).flat())]
