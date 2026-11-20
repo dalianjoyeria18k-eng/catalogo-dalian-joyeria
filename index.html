@@ -210,6 +210,11 @@ footer{background:var(--negro);color:#b5ab96;padding:64px 0 28px;font-size:14px}
 .envio-direccion input:focus{outline:2px solid #b49c79}
 .envio-direccion small{display:block;color:var(--gris);font-size:11px;line-height:1.5;margin-top:2px}
 .resumen-precio .domicilio-pendiente{color:#806947}
+.promo-primera{margin:0 0 12px;padding:11px 12px;border:1px solid rgba(168,137,92,.25);border-radius:9px;background:#fbf8f3}
+.promo-primera label{display:flex;align-items:center;gap:9px;color:#584632;font-size:13px;font-weight:650;cursor:pointer}
+.promo-primera input{width:17px;height:17px;accent-color:#a68458;flex:none}
+.promo-primera small{display:block;margin-top:6px;color:#766956;font-size:11px;line-height:1.5}
+.resumen-precio .bonificacion,.resumen-precio .bonificacion strong{color:#657d42}
 .resumen-precio{margin-bottom:15px;font-size:13px;color:var(--gris);line-height:1.5}
 .resumen-precio .fila{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
 .resumen-precio .fila strong{font-weight:700;color:var(--negro)}
@@ -489,7 +494,7 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
       <span class="eyebrow">La colección</span>
       <h2>Piezas que cuentan tu historia</h2>
       <p class="lead">Escoge tu favorita y agrégala a tu pedido. Lo confirmamos contigo por WhatsApp.</p>
-      <p class="promo-descuento">✦ 5% de descuento automático desde 3 unidades con precio publicado · Domicilio por cotizar según la zona de entrega ✦</p>
+      <p class="promo-descuento">✦ 5% en tu primera compra o 10% desde 3 Topos Virgen de Guadalupe / Gucci · No acumulables · Domicilio según zona ✦</p>
     </div>
     <div class="filtros" id="filtros"></div>
     <div class="grid" id="grid"></div>
@@ -641,6 +646,10 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
       <input id="zonaEntrega" type="text" autocomplete="address-level3" maxlength="100" placeholder="Ej. Caobos, Centro, Atalaya">
       <small>El domicilio depende de la zona. Te confirmamos el valor antes de pagar.</small>
     </div>
+    <div class="promo-primera">
+      <label for="primeraCompra"><input type="checkbox" id="primeraCompra"> Es mi primera compra en Dalian (5%)</label>
+      <small>Se valida por WhatsApp. El descuento del 10% por 3 unidades tiene prioridad; no se acumulan.</small>
+    </div>
     <div id="resumenPrecio" class="resumen-precio" aria-live="polite"></div>
     <a href="#" class="btn btn-ws" id="enviarPedido">Enviar pedido por WhatsApp</a>
   </div>
@@ -742,21 +751,24 @@ function pintarBolsa(){
     : '<p class="vacio">Tu pedido está vacío.<br>Agrega piezas desde la colección.</p>';
   document.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { const c=b.dataset.m; bolsa[c]--; if(bolsa[c]<=0) delete bolsa[c]; guardar(); pintarBolsa(); });
   document.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { bolsa[b.dataset.p]++; guardar(); pintarBolsa(); });
-  // El descuento es sobre productos con precio publicado y se activa desde 3 unidades.
-  // Las piezas de precio por consultar se cotizan aparte y no cuentan para el descuento.
-  let subtotal = 0, unidadesConPrecio = 0, haySinPrecio = false;
+  // Promociones limitadas a las referencias con costos y rentabilidad verificados.
+  const productosPromo = new Set(window.DALIAN_PRODUCTOS_PROMO || []);
+  let subtotal = 0, subtotalPromo = 0, unidadesPromo = 0, haySinPrecio = false;
   const lineas = cods.map(c => {
     const p = P.find(x=>x.codigo===c);
     if (p.precio) {
-      subtotal += Number(p.precio) * bolsa[c];
-      unidadesConPrecio += bolsa[c];
+      const importe = Number(p.precio) * bolsa[c];
+      subtotal += importe;
+      if (productosPromo.has(c)) { subtotalPromo += importe; unidadesPromo += bolsa[c]; }
     } else haySinPrecio = true;
     return `• ${bolsa[c]} x ${p.nombre} (${p.codigo})`;
   });
-  const aplicaDescuento = unidadesConPrecio >= 3;
-  const descuento = aplicaDescuento ? Math.round(subtotal * 0.05) : 0;
+  const primeraCompra = $('#primeraCompra').checked;
+  const promocion = unidadesPromo >= 3 ? 'tres' : primeraCompra && unidadesPromo > 0 ? 'primera' : 'ninguna';
+  const porcentaje = promocion === 'tres' ? 0.10 : promocion === 'primera' ? 0.05 : 0;
+  const descuento = Math.round(subtotalPromo * porcentaje);
   const total = subtotal - descuento;
-  const faltantes = Math.max(0, 3 - unidadesConPrecio);
+  const faltantes = Math.max(0, 3 - unidadesPromo);
   const ciudad = $('#ciudadEntrega').value.trim();
   const zona = $('#zonaEntrega').value.trim();
   const normalizar = str => String(str || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -768,12 +780,12 @@ function pintarBolsa(){
   const resumen = [];
   if (subtotal) {
     resumen.push(`<div class="fila"><span>Subtotal de piezas con precio</span><strong>${fmt(subtotal)}</strong></div>`);
-    if (aplicaDescuento) resumen.push(`<div class="fila ahorro"><span>Descuento automático (5%)</span><strong>−${fmt(descuento)}</strong></div>`);
+    if (descuento) resumen.push(`<div class="fila ahorro"><span>${promocion === 'tres' ? 'Descuento 10% (3+ unidades)' : '5% primera compra (por validar)'}</span><strong>−${fmt(descuento)}</strong></div>`);
     resumen.push(`<div class="fila"><span>${haySinPrecio?'Total de productos (parcial)':'Total de productos'}</span><strong>${fmt(total)}</strong></div>`);
   }
-  if (faltantes && cods.length) resumen.push(`<p class="tip">Agrega ${faltantes} ${faltantes===1?'unidad más':'unidades más'} con precio para recibir 5% de descuento.</p>`);
+  if (faltantes && unidadesPromo && cods.length) resumen.push(`<p class="tip">Agrega ${faltantes} ${faltantes===1?'topito participante más':'topitos participantes más'} para recibir 10% en esos modelos.</p>`);
   if (haySinPrecio) resumen.push('<p class="nota">Los artículos sin precio publicado se cotizan por WhatsApp y no cuentan para el descuento.</p>');
-  if (!cods.length) resumen.push('<p class="tip">Compra 3 o más unidades con precio publicado y recibe 5% de descuento.</p>');
+  if (!cods.length) resumen.push('<p class="tip">5% en tu primera compra o 10% desde 3 unidades de nuestros dos modelos participantes.</p>');
   if (cods.length) {
     resumen.push(`<div class="fila ${domicilio === null ? 'domicilio-pendiente' : ''}"><span>Domicilio</span><strong>${domicilio === null ? 'Por cotizar según zona' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio))}</strong></div>`);
     if (domicilio !== null && !haySinPrecio) {
@@ -784,8 +796,9 @@ function pintarBolsa(){
   }
   $('#resumenPrecio').innerHTML = resumen.join('');
   const detalleProductos = subtotal ? '\n\nSubtotal: ' + fmt(subtotal) +
-    (aplicaDescuento ? '\nDescuento 5%: -' + fmt(descuento) : '') +
+    (descuento ? '\n' + (promocion === 'tres' ? 'Descuento 10% (3+ unidades)' : 'Descuento 5% primera compra (por validar)') + ': -' + fmt(descuento) : '') +
     '\nTotal de productos (sin domicilio): ' + fmt(total) : '';
+  const validacion = promocion === 'primera' ? '\nSolicito validar mi descuento de primera compra.' : '';
   const detalleEntrega = '\n\nCiudad: ' + (ciudad || 'Sin indicar') +
     '\nBarrio o zona: ' + (zona || 'Sin indicar') +
     '\nDomicilio: ' + (domicilio === null ? 'Por cotizar según zona' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio)));
@@ -793,7 +806,7 @@ function pintarBolsa(){
     ? '\nTotal estimado con domicilio: ' + fmt(total + domicilio)
     : '\nPor favor, confirmar domicilio y total final.';
   const msg = '¡Hola DALIAN! ✨ Quiero hacer este pedido:\n' + lineas.join('\n') +
-    detalleProductos + detalleEntrega + resultado +
+    detalleProductos + validacion + detalleEntrega + resultado +
     (haySinPrecio ? '\nTambién hay piezas pendientes de cotización.' : '');
   $('#enviarPedido').href = cods.length ? ws(msg) : '#';
   $('#enviarPedido').target = '_blank';
@@ -801,6 +814,7 @@ function pintarBolsa(){
 $('#abrirBolsa').onclick = () => $('#drawer').classList.add('on');
 $('#cerrarBolsa').onclick = () => $('#drawer').classList.remove('on');
 ['#ciudadEntrega','#zonaEntrega'].forEach(sel => $(sel).addEventListener('input', pintarBolsa));
+$('#primeraCompra').addEventListener('change', pintarBolsa);
 
 // personaliza
 const hilos = [['Negro','#111'],['Rojo','#c0272d'],['Verde','#1f9a4a'],['Gris','#8f9396'],['Dorado','#d4b06a'],['Azul','#1d3f8f'],['Blanco','#f4f1ea']];
