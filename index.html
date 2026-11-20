@@ -489,7 +489,7 @@ footer .copy{border-top-color:rgba(134,102,59,.22)}
       <span class="eyebrow">La colección</span>
       <h2>Piezas que cuentan tu historia</h2>
       <p class="lead">Escoge tu favorita y agrégala a tu pedido. Lo confirmamos contigo por WhatsApp.</p>
-      <p class="promo-descuento">✦ 5% de descuento automático desde 3 unidades con precio publicado · Domicilio calculado según la zona de entrega ✦</p>
+      <p class="promo-descuento">✦ 5% de descuento automático desde 3 unidades con precio publicado · Domicilio por cotizar según la zona de entrega ✦</p>
     </div>
     <div class="filtros" id="filtros"></div>
     <div class="grid" id="grid"></div>
@@ -783,18 +783,12 @@ function pintarBolsa(){
     }
   }
   $('#resumenPrecio').innerHTML = resumen.join('');
-  const detallePago = subtotal
-    ? (aplicaDescuento
-      ? '\n\nSubtotal (piezas con precio): ' + fmt(subtotal) + '\nDescuento 5%: -' + fmt(descuento) + '\n' + (haySinPrecio?'Total parcial':'Total estimado') + ': ' + fmt(total)
-      : '\n\n' + (haySinPrecio?'Total parcial':'Total estimado') + ' (piezas con precio): ' + fmt(total))
-    : '';
-  const pendiente = haySinPrecio ? '\nHay productos por cotizar; confirmar el total final.' : '';
   const detalleProductos = subtotal ? '\n\nSubtotal: ' + fmt(subtotal) +
     (aplicaDescuento ? '\nDescuento 5%: -' + fmt(descuento) : '') +
     '\nTotal de productos (sin domicilio): ' + fmt(total) : '';
   const detalleEntrega = '\n\nCiudad: ' + (ciudad || 'Sin indicar') +
     '\nBarrio o zona: ' + (zona || 'Sin indicar') +
-    '\nDomicilio: ' + (domicilio === null ? 'Por cotizar según zona' : fmt(domicilio));
+    '\nDomicilio: ' + (domicilio === null ? 'Por cotizar según zona' : (domicilio === 0 ? 'Sin costo' : fmt(domicilio)));
   const resultado = domicilio !== null && !haySinPrecio
     ? '\nTotal estimado con domicilio: ' + fmt(total + domicilio)
     : '\nPor favor, confirmar domicilio y total final.';
